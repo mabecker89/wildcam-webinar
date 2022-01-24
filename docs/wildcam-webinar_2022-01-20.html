@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Towards an improved pipeline</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Marcus Becker" />
+    <meta name="date" content="2022-01-24" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Towards an improved pipeline
+## (for 📷 data in R 😉)
+### Marcus Becker
+### 2022-01-24
+
+---
+
+
+
+
+&lt;style type="text/css"&gt;
+/* custom.css */
+.left-code {
+  color: #777;
+  width: 40%;
+  height: 92%;
+  float: left;
+}
+.left-code-less {
+  color: #777;
+  width: 25%;
+  height: 92%;
+  float: left;
+}
+.right-plot {
+  width: 58%;
+  float: right;
+  padding-left: 1%;
+}
+.right-plot-more {
+  width: 65%;
+  float: right;
+  padding-left: 1%;
+}
+.plot-callout {
+  height: 225px;
+  width: 450px;
+  bottom: 5%;
+  right: 5%;
+  position: absolute;
+  padding: 0px;
+  z-index: 100;
+}
+.plot-callout img {
+  width: 100%;
+  border: 4px solid #23373B;
+}
+
+&lt;/style&gt;
+
+# Roadmap
+
+.pull-left[
+## 1. My niche:
+&lt;br&gt;
+## 2. [(One) Available Tool:](#wt)
+&lt;br&gt;
+## 3. [{wildRtrax}📦](#wrt)
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+## 4. What do *you* need?
+]
+
+.pull-right[
+&lt;img src="pics/ABMI-Horizontal-FullColour.png" height=55&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;img src="pics/wildtrax_colour_tagline.png" height=90&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;img src="pics/hex-logo-pipit.png" height=140&gt;
+]
+
+---
+# Our focus today:
+&lt;br&gt;
+&lt;br&gt;
+&lt;img src="pics/data-science-wrangle.png" height=315 align = "center"&gt;
+
+&lt;br&gt;
+&lt;br&gt;
+--
+**i.e. the boring parts!!!**
+--
+&lt;br&gt;
+We might dip into viz just to keep ourselves sane.
+--
+&lt;br&gt;
+*N.B.* We're going to get technical. The horror!
+
+---
+
+# Oops. I'm sorry.
+
+I realized this morning that this may be the first remote cameras presentation in history with no cute animal pictures.
+
+--
+
+&lt;br&gt;
+
+&lt;img src="pics/Fortune favors the bold - Imgur.gif" width = 800&gt;
+
+---
+# My (innocent?) workflow biases
+
+&lt;br&gt;
+### If I can, I want to do everything in R.&lt;sup&gt;1&lt;/sup&gt; 
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt;Generally, tidyverse-style. Sorry, purists!]
+
+--
+
+&lt;br&gt;
+### I'm going to show you how I use [WildTrax](#wt), but it is one tool of many.
+
+--
+
+&lt;br&gt;
+### There are many flavours of camera data analyses, and I am familiar with only a small number.
+
+---
+class: inverse, center, middle
+name: wt
+
+# WildTrax
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# What is WildTrax?
+
+&lt;br&gt;
++ An online platform for storing, managing, processing, and sharing biological data collected by environmental sensors (ie. remote cameras).
+
+--
+
++ Delivers multiple functions:
+  - Project and user management
+  - Data management and storage
+  - Data processing&lt;sup&gt;1&lt;/sup&gt;
+  - Data export/download
+  
+---
+count: false
+
+# What is WildTrax?
+
+&lt;br&gt;
++ An online platform for storing, managing, processing, and sharing biological data collected by environmental sensors (ie. remote cameras).
+
++ Delivers multiple functions:
+  - Project and user management
+  - Data management and storage
+  - Data processing&lt;sup&gt;1&lt;/sup&gt;
+  - **Data export/download**
+  
+### This is where we're going to pick up the story today. 
+
+---
+count: false
+
+# What is WildTrax?
+
+&lt;br&gt;
++ An online platform for storing, managing, processing, and sharing biological data collected by environmental sensors (ie. remote cameras).
+
++ Delivers multiple functions:
+  - Project and user management
+  - Data management and storage
+  - Data processing&lt;sup&gt;1&lt;/sup&gt;
+  - **Data export/download**
+  
+### This is where we're going to pick up the story today. 
+
+
+&lt;br&gt;
+.footnote[&lt;sup&gt;1&lt;/sup&gt;It's possible (likely) that you prefer to do this piece of the work on a different platform. There are tools available to **import not just your images but also any tags that you've previously made** into WildTrax.]
+
+---
+
+# Data Export/Download
+
+&lt;br&gt;
+
+## [How is this done through WildTrax?](www.wildtrax.ca)
+
+--
+
+&lt;br&gt;
+&lt;br&gt;
+
+OK, that works.
+
+&lt;br&gt;
+&lt;br&gt;
+
+--
+
+But I'm biased, remember? 
+&lt;br&gt;
+&lt;br&gt;
+Tedious tasks can often be replaced with an R script. And often this is a good idea when the task is prone to errors.   
+
+---
+class: inverse, center, middle
+name: wrt
+
+# {wildRtrax}📦
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+# Installing {wildRtrax}📦
+
+&lt;br&gt;
+
+```r
+# Use the remotes package to install wildRtrax directly from Github.
+# Use `@main` to ensure you are downloading the primary branch.
+
+remotes::install_github("ABbiodiversity/wildRtrax@main")
+
+# Once installed, attach the package.
+
+library(wildRtrax)
+```
+
+---
+# Authenticating into WildTrax
+
+
+```r
+# First we need to set up our username/pass as environment variables
+# Note: Need to be `WT_USERNAME` and `WT_PASSWORD`. 
+
+Sys.setenv(WT_USERNAME = "guest", WT_PASSWORD = "Apple123")
+```
+
+--
+
+These values live only on your device. But **be careful** about including sensitive information in a script that you may (inadvertently) share!
+
+--
+
+
+```r
+# One solution - the `keyring` package.
+
+library(keyring)
+
+keyring_create("wildtrax")
+key_set("WT_USERNAME", keyring = "wildtrax")
+key_set("WT_PASSWORD", keyring = "wildtrax")
+
+# This is now safe for my script!
+Sys.setenv(WT_USERNAME = key_get("WT_USERNAME", keyring = "wildtrax"),
+           WT_PASSWORD = key_get("WT_PASSWORD", keyring = "wildtrax"))
+```
+
+---
+
+# Authenticating into WildTrax
+
+
+```r
+# Now, all you need to do is run one function. With no arguments!!!
+
+*wt_auth()
+```
+
+---
+count:false
+
+# Authenticating into WildTrax
+
+
+```r
+# Now, all you need to do is run one function. With no arguments!!!
+
+wt_auth() 
+```
+&lt;br&gt;
+**So what's going on beneath the hood?**
+
+
+```r
+# Upon attachment, wildRtrax creates a new hidden environment (`._wt_auth_env_`) 
+# wt_auth() obtains an Auth0 token from WildTrax and stores it in this environment,
+# along with some other values. 
+
+*str(names(wildRtrax:::._wt_auth_env_))
+```
+
+```
+##  chr [1:6] "id_token" "scope" "expires_in" "expiry_time" "access_token" "token_type"
+```
+
+--
+
+
+```r
+# For example, your token expires after 8 hours. Check it's expiry time:
+*wildRtrax:::._wt_auth_env_$expiry_time
+```
+
+```
+## [1] "2022-01-20 16:45:08 MST"
+```
+
+---
+
+# So what?
+
+--
+
+### Well, now you can interact with your data directly in R!
+
+
+```r
+*# Your Auth0 token can be supplied to functions that call the WildTrax API.
+
+# Which camera projects do you have access to?
+my_projects &lt;- wt_get_download_summary( 
+  sensor_id = "CAM"
+)
+
+# Print
+glimpse(my_projects, width = 75)
+```
+
+```
+## Rows: 41
+## Columns: 6
+## $ project    &lt;list&gt; "ABMI Adopt-a-Camera 2017", "ABMI Amphibian Monitorin~
+## $ project_id &lt;list&gt; 589, 391, 797, 800, 847, 794, 205, 194, 197, 193, 195~
+## $ sensorId   &lt;list&gt; "CAM", "CAM", "CAM", "CAM", "CAM", "CAM", "CAM", "CAM~
+## $ year       &lt;list&gt; 2017, 2020, 2018, 2019, 2020, 2016, 2014, 2015, 2016,~
+## $ tags       &lt;list&gt; 208755, 88961, 6610, 20537, 25217, 49282, 9369, 18762~
+## $ status     &lt;list&gt; "Active", "Active", "Active", "Active", "Active", "Ac~
+```
+
+
+---
+
+# So what?
+
+The **[`wt_download_report()`](https://abbiodiversity.github.io/wildRtrax/reference/wt_download_report.html)** function mimics the data download on the WildTrax website.
+
+You need to supply the `project_id` value, which we can get from **[`wt_get_download_summary()`](https://abbiodiversity.github.io/wildRtrax/reference/wt_get_download_summary.html)**.
+
+--
+
+
+```r
+# I'm interested in the ABMI's Ecosystem Health project from 2014
+
+wt_get_download_summary(sensor_id = "CAM") %&gt;% 
+  filter(str_detect(project, "Ecosystem Health"),
+         year == 2014) %&gt;%
+  select(project_id) %&gt;%
+  pull() %&gt;%
+  unlist()
+```
+
+```
+## [1] 205
+```
+
+---
+
+# Download data directly into R
+
+&lt;br&gt;
+
+
+```r
+eh14_raw &lt;- wt_download_report(
+* project_id = 205,
+  sensor_id = "CAM",
+  cols_def = FALSE,
+  weather_cols = FALSE
+)
+```
+
+
+
+---
+
+# A nice dataframe!
+
+&lt;br&gt;
+
+
+```r
+*eh14_raw %&gt;% select(1:15) %&gt;% glimpse(width = 75)
+```
+
+```
+## Rows: 9,632
+## Columns: 15
+## $ project            &lt;chr&gt; "ABMI Ecosystem Health 2014", "ABMI Ecosystem ~
+## $ organization       &lt;chr&gt; "ABMI", "ABMI", "ABMI", "ABMI", "ABMI", "ABMI"~
+## $ location           &lt;chr&gt; "921-NE", "921-NE", "921-NE", "921-NE", "921-N~
+## $ latitude           &lt;dbl&gt; 54.30624, 54.30624, 54.30624, 54.30624, 54.306~
+## $ longitude          &lt;dbl&gt; -112.1837, -112.1837, -112.1837, -112.1837, -1~
+## $ buffer_radius_m    &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+## $ date_detected      &lt;chr&gt; " 2014-03-28 06:00:54", " 2014-03-22 20:54:39"~
+## $ field_of_view      &lt;chr&gt; "WITHIN", "WITHIN", "WITHIN", "WITHIN", "WITHI~
+## $ scientific_name    &lt;chr&gt; "Lepus americanus", "Lepus americanus", "Lepus~
+## $ common_name        &lt;chr&gt; "Snowshoe Hare", "Snowshoe Hare", "Snowshoe Ha~
+## $ species_rank       &lt;chr&gt; "Species", "Species", "Species", "Species", "S~
+## $ species_class      &lt;chr&gt; "MAMMALIA", "MAMMALIA", "MAMMALIA", "MAMMALIA"~
+## $ age_class          &lt;chr&gt; "Adult", "Adult", "Adult", "Adult", "Adult", "~
+## $ sex                &lt;chr&gt; "Unkn", "Unkn", "Unkn", "Unkn", "Unkn", "Unkn"~
+## $ number_individuals &lt;chr&gt; "1", "1", "1", "1", "1", "1", "1", "1", "1", "~
+```
+
+---
+
+# What about two projects at once?
+
+That's easy too!
+
+
+```r
+# This time, we want ABMI's Camera Model Comparison projects, from
+# three separate years. 
+
+model_comp_ids &lt;- wt_get_download_summary(sensor_id = "CAM") %&gt;% 
+* filter(str_detect(project, "Camera Model Comparison")) %&gt;%
+  select(project_id) %&gt;%
+  pull() %&gt;%
+  unlist()
+
+# The object model_comp_ids is a numeric vector
+model_comp_ids
+```
+
+```
+## [1] 797 800 847
+```
+
+---
+
+# What about two projects at once?
+
+
+```r
+# To avoid a for loop ...
+
+library(purrr)
+
+# Now we can feed all 3 values in project_list into `wt_download_report()`.
+model_comp_raw &lt;- map_df(.x = model_comp_ids,
+                         .f = ~ wt_download_report(
+                           project_id = .x,
+                           sensor_id = "CAM",
+                           cols_def = FALSE,
+                           weather_cols = FALSE))
+```
+
+
+
+
+---
+
+# Stitched together nicely
+
+&lt;br&gt;
+
+
+```r
+model_comp_raw %&gt;% select(1:15) %&gt;% glimpse(width = 75)
+```
+
+```
+## Rows: 51,431
+## Columns: 15
+## $ project            &lt;chr&gt; "ABMI Camera Model Comparison 2018", "ABMI Cam~
+## $ organization       &lt;chr&gt; "ABMI", "ABMI", "ABMI", "ABMI", "ABMI", "ABMI"~
+## $ location           &lt;chr&gt; "710-NE", "710-NE", "710-NE", "710-NE", "710-N~
+## $ latitude           &lt;dbl&gt; 55.9348, 55.9348, 55.9348, 55.9348, 55.9348, 5~
+## $ longitude          &lt;dbl&gt; -117.7968, -117.7968, -117.7968, -117.7968, -1~
+## $ buffer_radius_m    &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+## $ date_detected      &lt;chr&gt; " 2018-12-26 14:01:47", " 2018-12-26 13:59:34"~
+## $ field_of_view      &lt;chr&gt; "WITHIN", "WITHIN", "WITHIN", "WITHIN", "WITHI~
+## $ scientific_name    &lt;chr&gt; "STAFF/SETUP", "STAFF/SETUP", "STAFF/SETUP", "~
+## $ common_name        &lt;chr&gt; "STAFF/SETUP", "STAFF/SETUP", "STAFF/SETUP", "~
+## $ species_rank       &lt;chr&gt; "VNA", "VNA", "VNA", "VNA", "VNA", "VNA", "VNA~
+## $ species_class      &lt;chr&gt; "NONE", "NONE", "NONE", "NONE", "NONE", "NONE"~
+## $ age_class          &lt;chr&gt; "VNA", "VNA", "VNA", "VNA", "VNA", "VNA", "VNA~
+## $ sex                &lt;chr&gt; "VNA", "VNA", "VNA", "VNA", "VNA", "VNA", "VNA~
+## $ number_individuals &lt;chr&gt; "VNA", "VNA", "VNA", "VNA", "VNA", "VNA", "VNA~
+```
+
+---
+
+# So what?
+
+"You've made a slightly slicker version of `read.csv()`. Big deal."
+
+--
+
+&lt;br&gt;
+
+Well, there are benefits to scripting:
+
++ Always get the most up-to-date version of the data.
++ Your collaborators are working off the same data that you are.
++ Reproducibility! 
++ Storage schmorage. 
+
+--
+
+&lt;br&gt;
+
+"Surely there are other, more *interesting* functions in wildRtrax."
+
+--
+
+&lt;br&gt;
+
+There sure are!
+
+---
+
+# What's next?
+
+OK, let's orient ourselves back to this framework:
+
+&lt;br&gt;
+&lt;img src="pics/data-science-wrangle.png" height=315 align = "center"&gt;
+
+--
+
+&lt;br&gt;
+We've taken care of the **import** part of the pipeline. Let's work on **tidy** and **transform**. 
+
+---
+
+# Transform our camera data
+
+Most of the time, there are additional steps we want to take to transform our data into something more insightful or useful - for, say, modeling.
+
+--
+
+One common task: evaluating **independent detections**.
+
+--
+
++ There's a function in wildRtrax for that: [`wt_ind_detect()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_ind_det.R).
++ It's designed to work with the output (i.e. raw data) from [`wt_download_report()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_summarise_cam.R).
++ You specify the detection threshold. 
+
+--
+
+
+```r
+# Back to the Ecosystem Health 2014 data.
+
+eh14_detections &lt;- wt_ind_detect(
+  x = eh14_raw,
+  threshold = 30,
+  units = "minutes",
+  remove_human = TRUE,
+  remove_domestic = TRUE
+)
+```
+
+```
+## Your datetime_col has been converted to a Date.
+```
+
+---
+count:false
+
+# Transform our camera data
+
+Most of the time, there are additional steps we want to take to transform our data into something more insightful or useful - for, say, modeling.
+
+
+
+One common task: evaluating **independent detections**.
+
+
+
++ There's a function in wildRtrax for that: [`wt_ind_detect()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_ind_det.R).
++ It's designed to work with the output (i.e. raw data) from [`wt_download_report()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_summarise_cam.R).
++ You specify the detection threshold. 
+
+
+
+
+```r
+# Back to the Ecosystem Health 2014 data.
+
+eh14_detections &lt;- wt_ind_detect(
+* x = eh14_raw,
+  threshold = 30,
+  units = "minutes",
+  remove_human = TRUE,
+  remove_domestic = TRUE
+)
+```
+
+---
+count:false
+
+# Transform our camera data
+
+Most of the time, there are additional steps we want to take to transform our data into something more insightful or useful - for, say, modeling.
+
+
+
+One common task: evaluating **independent detections**.
+
+
+
++ There's a function in wildRtrax for that: [`wt_ind_detect()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_ind_det.R).
++ It's designed to work with the output (i.e. raw data) from [`wt_download_report()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_summarise_cam.R).
++ You specify the detection threshold. 
+
+
+
+
+```r
+# Back to the Ecosystem Health 2014 data.
+
+eh14_detections &lt;- wt_ind_detect(
+  x = eh14_raw, 
+* threshold = 30,
+* units = "minutes",
+  remove_human = TRUE,
+  remove_domestic = TRUE
+)
+```
+
+---
+count:false
+
+# Transform our camera data
+
+Most of the time, there are additional steps we want to take to transform our data into something more insightful or useful - for, say, modeling.
+
+
+
+One common task: evaluating **independent detections**.
+
+
+
++ There's a function in wildRtrax for that: [`wt_ind_detect()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_ind_det.R).
++ It's designed to work with the output (i.e. raw data) from [`wt_download_report()`](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_summarise_cam.R).
++ You specify the detection threshold. 
+
+
+
+
+```r
+# Back to the Ecosystem Health 2014 data.
+
+eh14_detections &lt;- wt_ind_detect(
+  x = eh14_raw, 
+  threshold = 30,
+  units = "minutes",
+* remove_human = TRUE,
+* remove_domestic = TRUE
+)
+```
+
+---
+
+# Transform our camera data
+
+
+```r
+*glimpse(eh14_detections, width = 75)
+```
+
+```
+## Rows: 307
+## Columns: 11
+## Groups: detection, project, location, common_name [307]
+## $ detection              &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,~
+## $ project                &lt;chr&gt; "ABMI Ecosystem Health 2014", "ABMI Ecosys~
+## $ location               &lt;chr&gt; "509-NW", "509-NW", "509-NW", "509-NW", "5~
+## $ common_name            &lt;chr&gt; "Snowshoe Hare", "Snowshoe Hare", "Snowsho~
+## $ scientific_name        &lt;chr&gt; "Lepus americanus", "Lepus americanus", "L~
+## $ start_time             &lt;dttm&gt; 2014-03-27 02:10:28, 2014-04-01 03:59:24,~
+## $ end_time               &lt;dttm&gt; 2014-03-27 02:10:28, 2014-04-01 03:59:24,~
+## $ total_duration_seconds &lt;dbl&gt; 0, 0, 0, 0, 3, 0, 0, 44, 11, 4, 60, 0, 177~
+## $ n_images               &lt;int&gt; 1, 1, 1, 1, 2, 1, 1, 9, 4, 3, 9, 1, 23, 36~
+## $ avg_animals            &lt;dbl&gt; 1.000000, 1.000000, 1.000000, 1.000000, 1.~
+## $ max_animals            &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, ~
+```
+
+--
+
+**307** independent detections in this dataset, when using a threshld of 30 minutes.
+
+---
+
+# Quickly test different thresholds
+
+&lt;br&gt;
+
+
+```r
+# 120 seconds versus 30 minutes
+
+eh14_detections_45s &lt;- wt_ind_detect(
+  x = eh14_raw,
+* threshold = 45,
+* units = "seconds",
+  remove_human = TRUE,
+  remove_domestic = TRUE
+)
+```
+
+```
+## Your datetime_col has been converted to a Date.
+```
+
+---
+
+# Quickly test different thresholds
+
+
+```r
+# 120 seconds versus 30 minutes
+
+*glimpse(eh14_detections_45s, width = 75)
+```
+
+```
+## Rows: 377
+## Columns: 11
+## Groups: detection, project, location, common_name [377]
+## $ detection              &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,~
+## $ project                &lt;chr&gt; "ABMI Ecosystem Health 2014", "ABMI Ecosys~
+## $ location               &lt;chr&gt; "509-NW", "509-NW", "509-NW", "509-NW", "5~
+## $ common_name            &lt;chr&gt; "Snowshoe Hare", "Snowshoe Hare", "Snowsho~
+## $ scientific_name        &lt;chr&gt; "Lepus americanus", "Lepus americanus", "L~
+## $ start_time             &lt;dttm&gt; 2014-03-27 02:10:28, 2014-04-01 03:59:24,~
+## $ end_time               &lt;dttm&gt; 2014-03-27 02:10:28, 2014-04-01 03:59:24,~
+## $ total_duration_seconds &lt;dbl&gt; 0, 0, 0, 0, 3, 0, 0, 44, 11, 4, 60, 0, 177~
+## $ n_images               &lt;int&gt; 1, 1, 1, 1, 2, 1, 1, 9, 4, 3, 9, 1, 23, 36~
+## $ avg_animals            &lt;dbl&gt; 1.000000, 1.000000, 1.000000, 1.000000, 1.~
+## $ max_animals            &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, ~
+```
+
+**377** independent detections in this dataset, when using a threshold of 45 seconds.
+
+---
+
+# Our main engine
+
+The output from `wt_ind_detect()` gave us some useful information. 
+
+--
+
+But we probably need to do additional wrangling for our data to be in the proper format for certain modeling techniques (e.g. habitat modeling, occupancy).
+
+For example, we want to evaluate the number of detections in a specified time interval (e.g. daily, weekly, or monthly), *including zeroes*. 
+
+--
+
+&lt;br&gt;
+
+## So the ⭐ of the show is: [**`wt_summarise_cam()`**](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_summarise_cam.R)
+
+---
+
+# Summarise your camera data
+
+## [**`wt_summarise_cam()`**](https://github.com/ABbiodiversity/wildRtrax/blob/main/R/wt_summarise_cam.R)
+
+&lt;br&gt;
+
+### You specify the following arguments:
+&lt;br&gt;
++ The output from `wt_ind_detect()` (e.g. the object `eh14_detections_45s`)
+
++ Your raw data (e.g. the object `eh14_raw`)
+
++ The time interval you're interested in (e.g. weekly)
+
++ The variable you're interested in (e.g. detections, presence/absence)
+
++ The desired output format ('wide' or 'long')
+
+---
+
+# Summarise your camera data
+
+&lt;br&gt;
+
+
+```r
+# A call to `wt_summarise_cam()`:
+
+eh14_summarised &lt;- wt_summarise_cam(
+  detect_data = eh14_detections_45s,
+  raw_data = eh14_raw,
+  time_interval = "week",
+  variable = "detections",
+  output_format = "wide"
+)
+```
+
+---
+count:false
+
+# Summarise your camera data
+
+&lt;br&gt;
+
+
+```r
+# A call to `wt_summarise_cam()`:
+
+eh14_summarised &lt;- wt_summarise_cam(
+* # Supply your detection data
+* detect_data = eh14_detections_45s,
+  raw_data = eh14_raw,
+  time_interval = "week",
+  variable = "detections",
+  output_format = "wide"
+)
+```
+
+---
+count:false
+
+# Summarise your camera data
+
+&lt;br&gt;
+
+
+```r
+# A call to `wt_summarise_cam()`:
+
+eh14_summarised &lt;- wt_summarise_cam(
+  # Supply your detection data
+  detect_data = eh14_detections_45s,
+* # Supply your raw image data
+* raw_data = eh14_raw,
+  time_interval = "week",
+  variable = "detections",
+  output_format = "wide"
+)
+```
+
+---
+count:false
+
+# Summarise your camera data
+
+&lt;br&gt;
+
+
+```r
+# A call to `wt_summarise_cam()`:
+
+eh14_summarised &lt;- wt_summarise_cam(
+  # Supply your detection data
+  detect_data = eh14_detections_45s,
+  # Supply your raw image data
+  raw_data = eh14_raw,
+* # Now specify the time interval you're interested in
+* time_interval = "week",
+  variable = "detections",
+  output_format = "wide"
+)
+```
+
+---
+count: false
+
+# Summarise your camera data
+
+&lt;br&gt;
+
+
+```r
+# A call to `wt_summarise_cam()`:
+
+eh14_summarised &lt;- wt_summarise_cam(
+  # Supply your detection data
+  detect_data = eh14_detections_45s,
+  # Supply your raw image data
+  raw_data = eh14_raw,
+  # Now specify the time interval you're interested in 
+  time_interval = "week",
+* # What variable are you interested in?
+* variable = "detections",
+  output_format = "wide"
+)
+```
+
+---
+count: false
+
+# Summarise your camera data
+
+&lt;br&gt;
+
+
+```r
+# A call to `wt_summarise_cam()`:
+
+eh14_summarised &lt;- wt_summarise_cam(
+  # Supply your detection data
+  detect_data = eh14_detections_45s,
+  # Supply your raw image data
+  raw_data = eh14_raw,
+  # Now specify the time interval you're interested in 
+  time_interval = "week",
+  # What variable are you interested in?
+  variable = "detections",
+* # Your desired output format (wide or long)
+* output_format = "wide"
+)
+```
+--
+### Let's go interactive to really explore all these options.
+
+---
+
+# Pretty much
+
+&lt;img src="pics/feelings-of-power.png", height=525&gt;
+
+---
+
+# The ulimate pipeline
+
+
+```r
+library(wildRtrax)
+Sys.setenv(WT_USERNAME = "*****",
+           WT_PASSWORD = "*****")
+wt_auth()
+
+
+data &lt;- wt_get_download_summary("CAM") %&gt;%
+  filter(project = "ABMI Ecosystem Health 2014") %&gt;%
+  select(project_id) %&gt;%
+  pull() %&gt;%
+  unlist() %&gt;%
+  wt_download_report("CAM")
+
+
+summarised &lt;- wt_ind_detect(data, 30, "minutes") %&gt;%
+  wt_summarise_cam(data, "day", "detections", "long")
+```
+--
+&lt;br&gt;
+**And now you can get straight into the science!!**
+
+---
+
+# OK, I promised a quick vis.
+
+The **"wide"** format from `wt_summarise_cam()` is often more useful for downstream analyses.
+
+But the **"long"** format plays really nicely with {ggplot2} for data visualization!
+
+
+```r
+# Let's visualize moose detections over time.
+
+moose_detections &lt;- eh14_raw %&gt;%
+* filter(common_name == "Moose") %&gt;%
+  wt_ind_detect(threshold = 120, units = "seconds")
+```
+
+```
+## Your datetime_col has been converted to a Date.
+```
+
+---
+count:false
+
+# OK, I promised a quick vis.
+
+The **"wide"** format from `wt_summarise_cam()` is often more useful for downstream analyses.
+
+But the **"long"** format plays really nicely with {ggplot2} for data visualization!
+
+
+```r
+# Let's visualize moose detections over time.
+
+moose_detections &lt;- eh14_raw %&gt;%
+  filter(common_name == "Moose") %&gt;%
+  wt_ind_detect(threshold = 120, units = "seconds")
+```
+
+
+```r
+moose_summary &lt;- wt_summarise_cam(
+  detect_data = moose_detections,
+  raw_data = eh14_raw,
+  time_interval = "month",
+  variable = "detections",
+* output_format = "long"
+)
+```
+
+```
+## Joining, by = c("project", "location", "month", "common_name")
+```
+
+---
+
+# OK, I promised a quick vis.
+
+The **"wide"** format from `wt_summarise_cam()` is often more useful for downstream analyses.
+
+But the **"long"** format plays really nicely with {ggplot2} for data visualization!
+
+
+```r
+moose_summary %&gt;%
+  group_by(month) %&gt;%
+  summarise(total_detections = sum(value)) %&gt;%
+  head(10)
+```
+
+---
+count:false
+
+# OK, I promised a quick vis.
+
+The **"wide"** format from `wt_summarise_cam()` is often more useful for downstream analyses.
+
+But the **"long"** format plays really nicely with {ggplot2} for data visualization!
+
+
+```r
+moose_summary %&gt;%
+* group_by(month) %&gt;%
+* summarise(total_detections = sum(value)) %&gt;%
+  head(10)
+```
+
+---
+count:false
+
+# OK, I promised a quick vis.
+
+The **"wide"** format from `wt_summarise_cam()` is often more useful for downstream analyses.
+
+But the **"long"** format plays really nicely with {ggplot2} for data visualization!
+
+
+```r
+moose_summary %&gt;%
+  group_by(month) %&gt;%
+  summarise(total_detections = sum(value))
+```
+
+```
+## # A tibble: 5 x 2
+##   month total_detections
+##   &lt;ord&gt;            &lt;dbl&gt;
+## 1 March                0
+## 2 April                5
+## 3 May                  9
+## 4 June                37
+## 5 July                16
+```
+
+---
+
+# OK, I promised a quick vis.
+
+.left-code[
+
+```r
+# Attach the ggplot2 package
+library(ggplot2)
+
+moose_summary %&gt;%
+  group_by(month) %&gt;%
+  summarise(td = sum(value)) %&gt;%
+* ggplot(aes(
+*   x = month,
+*   y = td,
+*   fill = month)) +
+* geom_col(color = "black") +
+* labs(x = "",
+*      y = "Moose Detections") +
+* theme_minimal() +
+* theme(legend.position = "none")
+```
+]
+
+--
+
+
+.right-plot[
+&lt;img src="wildcam-webinar_2022-01-20_files/figure-html/unnamed-chunk-38-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Takeaways
+
+&lt;br&gt;
+
+### Think of the pipeline!
+
+--
+
+&lt;br&gt;
+
+### Automate repetitive tasks with useful functions
+
+--
+
+&lt;br&gt;
+
+### Open source is good!
+
+---
+class: inverse, center, middle
+name: ty
+
+# Thank you!!!
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"hightlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

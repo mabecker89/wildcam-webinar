@@ -1,0 +1,72 @@
+---
+title: "Interactive part of WildCam Webinar"
+author: "Marcus Becker"
+date: `r Sys.Date()`
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Attach packages
+library(wildRtrax)
+library(keyring)
+
+# Set up environment variables
+Sys.setenv(WT_USERNAME = key_get("WT_USERNAME", keyring = "wildtrax"),
+           WT_PASSWORD = key_get("WT_PASSWORD", keyring = "wildtrax"))
+
+# Authenticate
+wt_auth()
+
+```
+
+First things first, grab the data.
+
+```{r}
+
+eh14_raw <- wt_download_report(project_id = 205, 
+                               sensor_id = "CAM",
+                               weather_cols = FALSE,
+                               cols_def = FALSE)
+
+```
+
+Let's take a look at the output from `wt_ind_detect()` more closely. 
+
+```{r}
+
+# Start out with 30 minute threshold
+t <- 30
+
+eh14_detections <- wt_ind_detect(
+  x = eh14_raw,
+  threshold = t,
+  unit = "minutes",
+  remove_human = TRUE,
+  remove_domestic = TRUE
+)
+
+```
+
+Now, we can play around with `wt_summarise_cam()`.
+
+```{r}
+
+eh14_summarised <- wt_summarise_cam(
+  # Supply your detection data
+  detect_data = eh14_detections,
+  # Supply your raw image data
+  raw_data = eh14_raw,
+  # Now specify the time interval you're interested in 
+  time_interval = "month",
+  # What variable are you interested in?
+  variable = "presence",
+  # Your desired output format (wide or long)
+  output_format = "long" 
+)
+
+```
+
+
+
